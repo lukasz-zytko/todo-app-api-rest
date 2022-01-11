@@ -27,9 +27,13 @@ class Todos:
             json.dump(self.todos, f)
 
     def update(self, id, data):
-        data.pop('csrf_token')
-        self.todos[id] = data
-        self.save_all()
+        todo = self.get(id)
+        if todo:
+            index = self.todos.index(todo)
+            self.todos[index] = data
+            self.save_all()
+            return True
+        return False
     
     def delete(self, id):
         todo = self.get(id)
