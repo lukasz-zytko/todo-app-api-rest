@@ -13,11 +13,14 @@ class Todos:
         return self.todos
 
     def get(self, id):
-        return self.todos[id]
+        todo = [todo for todo in self.all() if todo['id'] == id]
+        if todo:
+            return todo[0]
+        return []
 
     def create(self, data):
-        data.pop('csrf_token')
         self.todos.append(data)
+        self.save_all()
 
     def save_all(self):
         with open("todos.json", "w") as f:
@@ -27,6 +30,14 @@ class Todos:
         data.pop('csrf_token')
         self.todos[id] = data
         self.save_all()
+    
+    def delete(self, id):
+        todo = self.get(id)
+        if todo:
+            self.todos.remove(todo)
+            self.save_all()
+            return True
+        return False
 
 
 todos = Todos()
